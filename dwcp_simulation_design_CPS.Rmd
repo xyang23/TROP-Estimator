@@ -5,7 +5,7 @@ output: html_notebook
 
 To begin we will import the necessary libraries to replicate the code from Python to R. Ensure all packages are installed before attempting to run the file.
 ```{r}
-pck <- c("Matrix", "CVXR", "data.table", "ggplot2", "parallel", "synthdid", "caret")
+pck <- c("Matrix", "CVXR", "data.table", "ggplot2", "parallel", "synthdid", "caret", "MASS")
 lapply(pck, library, character.only = TRUE) 
 ```
 We begin by replicating the decomposition functions. The order of the functions is changed for accessibility.
@@ -210,6 +210,103 @@ do_CV <- function(Y_obs, O, lambdas = c(5, 10, 20, 40), n_tries = 10, verbose = 
   }
   
   return(score)
+}
+
+```
+
+
+For smoothness of code we define helper functions to calculate the unit and time based weights
+```{r}
+# Define distance functions
+dist_time <- function(s, T, T_treat) {
+  abs(s - (T - T_treat / 2))
+}
+
+dist_unit <- function(j, Y, W, N_treat, T, T_treat) {
+  untreated_time <- 1:(T - T_treat)
+  Y_j_untreated <- mean(Y[j, untreated_time])
+  Y_treated_avg <- mean(Y[(N - N_treat + 1):N, untreated_time])
+
+  squared_diffs <- sum((Y[j, untreated_time] - Y_treated_avg)^2)
+  sqrt(squared_diffs / (T - T_treat))
+}
+
+# Define weight calculation
+calculate_weights <- function(lambda_time, lambda_unit, Y, W, N_treat, T, T_treat) {
+  weights <- matrix(0, nrow = nrow(Y), ncol = ncol(Y))
+  for (j in 1:nrow(Y)) {
+    for (s in 1:ncol(Y)) {
+      if (W[j, s] == 0) {
+        time_dist <- dist_time(s, T, T_treat)
+        unit_dist <- dist_unit(j, Y, W, N_treat, T, T_treat)
+        weights[j, s] <- exp(-lambda_time * time_dist - lambda_unit * unit_dist)
+      }
+    }
+  }
+  weights
+}
+```
+
+Objective Function
+```{r}
+# Objective function
+objective <- function(params, Y, W, weights, placebo_units, lambda_nn) {
+  tau <- params[1]
+  mu <- params[2]
+  alpha <- params[3]
+  beta <- params[4]
+  L <- matrix(params[-(1:4)], nrow = nrow(Y), ncol = ncol(Y))
+
+  W_placebo <- W
+  W_placebo[placebo_units, (ncol(W) - T_treat + 1):ncol(W)] <- 1
+  
+  residuals <- weights * ((Y - (mu + alpha + beta + L - W_placebo * tau))^2)
+  penalty <- lambda_nn * norm(L, "F")
+  sum(residuals) + penalty
+}
+```
+
+The new cross validation procedure
+```{r}
+# Cross-validation function
+cross_validation <- function(Y, W, lambda_grid, num_runs = 500) {
+  N <- nrow(Y)
+  T <- ncol(Y)
+  
+  N_treat <- nrow(W)
+  T_treat <- ncol(W)
+  
+  best_lambda <- NULL
+  best_std_dev <- Inf
+
+  for (lambda_time in lambda_grid) {
+    for (lambda_unit in lambda_grid) {
+      for (lambda_nn in lambda_grid) {
+        weights <- calculate_weights(lambda_time, lambda_unit, Y, W, N_treat, T, T_treat)
+        aate_estimates <- numeric(num_runs)
+        
+        for (run in 1:num_runs) {
+          control_units <- which(rowSums(W) == 0)
+          placebo_units <- sample(control_units, N_treat, replace = FALSE)
+
+          init_params <- c(0, 0, 0, 0, rep(0, length(Y)))
+          result <- optim(init_params, fn = objective, Y = Y, W = W, weights = weights,
+                          placebo_units = placebo_units, lambda_nn = lambda_nn)
+
+          if (result$convergence == 0) {
+            ate_estimates[run] <- result$value
+          }
+        }
+
+        std_dev <- sd(ate_estimates)
+        if (std_dev < best_std_dev) {
+          best_std_dev <- std_dev
+          best_lambda <- c(lambda_time, lambda_unit, lambda_nn)
+        }
+      }
+    }
+  }
+  list(best_lambda = best_lambda, best_std_dev = best_std_dev)
 }
 
 ```
