@@ -1,4 +1,4 @@
-# Doubly Weighted Causal Panel (DWCP) Estimators
+# Triply Robust Panel Estimators (TRPE)
 
 This package contains the replication files and implementation of the DWCP estimator.
 
