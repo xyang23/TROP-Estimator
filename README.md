@@ -30,12 +30,6 @@ devtools::install_github('')
 
 ## Table of Functions
 
----
-title: "Table of Functions"
-output: html_document
-date: "2025-03-25"
----
-
 | Function       | Inputs                         | Output                         |
 |----------------|--------------------------------|--------------------------------|
 | `ar2_correlation_matrix()`   | `ar_coef`: , `T_`:    | cor_matrix |
