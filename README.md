@@ -4,9 +4,9 @@ New todo:
 
 2. scaled difference with paper table.
 
-# Triply Robust Panel Estimators (TRPE)
+# Triply Robust Panel Estimators (TROP)
 
-This package contains the replication files and implementation of the DWCP estimator.
+This package contains the replication files and implementation of the TROP estimator.
 
 ## Dependencies
 
