@@ -34,6 +34,7 @@ devtools::install_github('')
 ```
 ### Example execution
 Before running the compute_DWCP functions, make sure to have run something like the following in order to have the requisite parameters. Change the column from $hours to something else as you see fit. 
+``` r
 df <- read.csv('CPS.csv', sep = ';')
 Y_true_full <- matrix(df$hours, nrow = 40, byrow = TRUE)
 Y_true_full <- t(Y_true_full)
@@ -55,7 +56,7 @@ valid <- cross_validation(Y_true_full, W_true_full, 1#10^seq(-4, 2, length.out =
 lambda_unit <- valid$best_lambda[1]
 lambda_time <- valid$best_lambda[2]
 lambda_nn <- valid$best_lambda[3]
-
+```
 
 
 ## Table of Functions
