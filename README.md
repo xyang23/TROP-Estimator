@@ -33,6 +33,30 @@ Once the non-CRAN dependencies are installed, install the package with
 devtools::install_github('')
 ```
 ### Example execution
+Before running the compute_DWCP functions, make sure to have run something like the following in order to have the requisite parameters. Change the column from $hours to something else as you see fit. 
+df <- read.csv('CPS.csv', sep = ';')
+Y_true_full <- matrix(df$hours, nrow = 40, byrow = TRUE)
+Y_true_full <- t(Y_true_full)
+Y_true_full <- Y_true_full / sd(Y_true_full)
+Y_true_full <- Y_true_full - mean(Y_true_full)
+N_total <- nrow(Y_true_full)
+T_total <- ncol(Y_true_full)
+W_true_full <- matrix(0, N_total, T_total)
+
+#creating the assignment vector for minimum wage
+min_wage <- matrix(df$min_wage, nrow = 40, byrow = TRUE)
+min_wage <- t(min_wage)
+Ds <- which(min_wage == TRUE, arr.ind = TRUE)[, 1]
+assignment_vector <- numeric(N_total)
+assignment_vector[Ds] <- 1
+
+valid <- cross_validation(Y_true_full, W_true_full, 1#10^seq(-4, 2, length.out = 10)
+                          , num_runs = 2)#500)  
+lambda_unit <- valid$best_lambda[1]
+lambda_time <- valid$best_lambda[2]
+lambda_nn <- valid$best_lambda[3]
+
+
 
 ## Table of Functions
 
