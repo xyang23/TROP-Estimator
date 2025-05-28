@@ -5,7 +5,8 @@ Required python modules
 numpy
 pandas
 pickle
-
+joblib
+sklearn.linear_model
 
 
 
