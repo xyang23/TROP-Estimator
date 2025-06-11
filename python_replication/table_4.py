@@ -38,8 +38,8 @@ TROP_dict = {'Baseline': [0.01, 0.2, 0.2],
             'Only Noise': [1.8, 0.005, 0.4],
             'No Noise': [5.8, 1.2, 0.21],
             'T_post=1': [1.8, 0.5, 0.321],
-            'N_treated=1': [4.5, 0.2, 0.011],
-            'T_post=N_treated=1': [0.9, 0.04, 0.301]}
+            'N_tr=1': [4.5, 0.2, 0.011],
+            'T_post=N_tr=1': [0.9, 0.04, 0.301]}
 
 for setting, config in configs.items():
     
@@ -56,8 +56,8 @@ for setting, config in configs.items():
     RMSE[setting], bias[setting] = parallel_experiments(num_cores, num_experiments, simulation_components, TROP_dict[setting], option)
 
 # save output to table
-pd.DataFrame({'setting': RMSE.keys(), 'RMSE': RMSE.values()}).to_csv('RMSE.csv')
-    
+pd.DataFrame({'setting': RMSE.keys(), 'RMSE': RMSE.values()}).to_csv('RMSE_table_4.csv')
+pd.DataFrame({'setting': bias.keys(), 'bias': bias.values()}).to_csv('bias_table_4.csv')    
 # save data and TROP parameters for reference
 with open('table_4_processed_data.pkl', 'wb') as file:
     pickle.dump(data_dict, file)
