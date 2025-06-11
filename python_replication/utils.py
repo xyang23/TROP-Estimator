@@ -4,6 +4,21 @@ from joblib import Parallel, delayed
 from sklearn.linear_model import LogisticRegression
 from methods import DID_TWFE, SC_TWFE, DIFP_TWFE, TROP_TWFE_average, SDID_weights, SDID_TWFE
 
+def load_PENN_data(outcome='log_gdp', treatment='dem'):
+    df = pd.read_csv('PENN.csv',sep=';')
+    Y_true_full = np.reshape(df[outcome].values, (48,-1))
+    Y_true_full = Y_true_full.T
+    Y_true_full /= np.std(Y_true_full)
+    Y_true_full -= np.mean(Y_true_full)
+    N_total,T_total = Y_true_full.shape
+
+    treatments = np.reshape(df[treatment].values, (48,-1)).T  
+    Ds = np.argwhere(treatments==True)[:,0]
+    assignment_vector = np.zeros((N_total,))
+    assignment_vector[Ds] = 1
+    
+    return [Y_true_full, assignment_vector]
+
 def load_CPS_data(outcome='log_wage', treatment='min_wage'):
     df = pd.read_csv('CPS.csv',sep=';')
     Y_true_full = np.reshape(df[outcome].values, (40,-1))
