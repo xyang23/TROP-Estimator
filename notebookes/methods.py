@@ -3,6 +3,9 @@
 import numpy as np
 import cvxpy as cp
 
+# Inputs: Y, panel of outcomes; shape N x T
+# W, matrix of size N x T that encodes treatment status of each entry
+
 def DID_TWFE(Y,W):
     N, T = Y.shape
     unit_effects = cp.Variable((1,N))
@@ -23,6 +26,9 @@ def DID_TWFE(Y,W):
     prob.solve()
 
     return tau.value
+
+# treated_units: indicator vector of treated units
+# treated_periods: number of treated periods
 
 def SC_TWFE(Y,W,treated_units,treated_periods = 10):
 
@@ -66,6 +72,8 @@ def DIFP_TWFE(Y,W,treated_units,treated_periods = 10):
     y_predict = X_predict.dot(unit_weights.value)+intercept.value
 
     return np.mean(Y[treated_units,-treated_periods:])-np.mean(y_predict)
+
+# lambda_unit,lambda_time,lambda_nn: tuning parameters for TROP; determined using cross-validation
 
 def TROP_TWFE_average(Y,W,treated_units,lambda_unit,lambda_time,lambda_nn,treated_periods = 10):
     
