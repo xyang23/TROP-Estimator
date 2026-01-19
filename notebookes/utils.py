@@ -15,6 +15,10 @@ def get_ATE(trial, Y, lambda_unit, lambda_time, lambda_nn, treated_units, treate
     estimate = TROP_TWFE_average(Y,W_test, test_units,lambda_unit=lambda_unit,lambda_time=lambda_time,lambda_nn=lambda_nn,treated_periods=treated_periods)
     return estimate
 
+# Y_control: sub-panel consisting of control entries of a given panel
+# treated_units: number of treated units in the given panel
+# treated_periods: number of treated periods in the given panel (assuming a block treatment)
+
 def TROP_cv_single(Y_control, treated_units, treated_periods, fixed_lambdas=[0,0], lambda_grid=np.arange(0,2,2/10), lambda_cv='unit'):
     Q = []
     for lamb in lambda_grid:
