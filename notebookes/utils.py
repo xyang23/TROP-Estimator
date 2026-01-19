@@ -6,6 +6,84 @@ import cvxpy as cp
 from methods import DID_TWFE, SC_TWFE, DIFP_TWFE, TROP_TWFE_average, SDID_weights, SDID_TWFE
 import pyreadr
 
+def get_ATE(trial, Y, lambda_unit, lambda_time, lambda_nn, treated_units, treated_periods):
+    np.random.seed(trial)
+    N, T = Y.shape
+    test_units = np.random.choice(np.arange(N), size=treated_units,replace=False)
+    W_test = np.zeros(Y.shape)
+    W_test[test_units,-treated_periods:] = 1
+    estimate = TROP_TWFE_average(Y,W_test, test_units,lambda_unit=lambda_unit,lambda_time=lambda_time,lambda_nn=lambda_nn,treated_periods=treated_periods)
+    return estimate
+
+def TROP_cv_single(Y_control, treated_units, treated_periods, fixed_lambdas=[0,0], lambda_grid=np.arange(0,2,2/10), lambda_cv='unit'):
+    Q = []
+    for lamb in lambda_grid:
+        if lambda_cv == 'unit':
+            lambda_unit = lamb
+            lambda_time = fixed_lambdas[0]
+            lambda_nn = fixed_lambdas[1]
+        elif lambda_cv == 'time':
+            lambda_time = lamb
+            lambda_unit = fixed_lambdas[0]
+            lambda_nn = fixed_lambdas[1]
+        elif lambda_cv == 'nn':
+            lambda_nn = lamb
+            lambda_unit = fixed_lambdas[0]
+            lambda_time = fixed_lambdas[1]
+            
+        #print(lambda_unit,lambda_time,lambda_nn)
+        ATEs = Parallel(n_jobs=36, prefer='processes')(
+                     delayed(get_ATE)(trial,Y_control,lambda_unit=lambda_unit,lambda_time=lambda_time,lambda_nn=lambda_nn,treated_units=treated_units,treated_periods=treated_periods)
+                     for trial in range(200))
+        Q.append(np.sqrt(np.mean(np.square(ATEs))))
+        #print(np.sqrt(np.mean(np.square(ATEs))))
+        
+    return lambda_grid[np.argmin(Q)]
+
+def TROP_cv_cycle(Y_control, treated_units, treated_periods, unit_grid, time_grid, nn_grid, lambdas_init=None, max_iter=500):
+    fixed_point = False
+    iteration = 1
+    
+    if lambdas_init == None:
+        # select the initial values of lambda_time and lambda_nn
+        lambda_unit = (unit_grid[0]+unit_grid[-1])/2
+        lambda_time = (time_grid[0]+time_grid[-1])/2
+        lambda_nn = (nn_grid[0]+nn_grid[-1])/2
+    else: 
+        lambda_unit, lambda_time, lambda_nn = lambdas_init
+    
+    while (fixed_point == False) & (iteration <= max_iter):
+        
+        old_lambda_unit = lambda_unit
+        old_lambda_time = lambda_time
+        old_lambda_nn = lambda_nn
+        
+        lambda_unit = TROP_cv_single(Y_control, treated_units, treated_periods, [lambda_time, lambda_nn], unit_grid, 'unit')
+        lambda_time = TROP_cv_single(Y_control, treated_units, treated_periods, [lambda_unit, lambda_nn], time_grid, 'time')
+        lambda_nn = TROP_cv_single(Y_control, treated_units, treated_periods, [lambda_unit, lambda_time], nn_grid, 'nn')
+        
+        if (lambda_unit == old_lambda_unit) & (lambda_time == old_lambda_time) & (lambda_nn == old_lambda_nn):
+            return [lambda_unit, lambda_time, lambda_nn]
+    
+        iteration += 1
+    return 'Did not find a local minimum.'
+
+def TROP_cv_joint(Y_control, treated_units, treated_periods, unit_grid, time_grid, nn_grid):
+    
+    d = {}
+    
+    for lambda_unit in unit_grid:
+        for lambda_time in time_grid:
+            for lambda_nn  in nn_grid:
+                
+                ATEs = Parallel(n_jobs=36, prefer='processes')(
+                                 delayed(get_ATE)(trial,Y_control,lambda_unit=lambda_unit,lambda_time=lambda_time,lambda_nn=lambda_nn,treated_units=treated_units,treated_periods=treated_periods)
+                                 for trial in range(200))
+    
+                d[(lambda_unit, lambda_time, lambda_nn)] = np.sqrt(np.mean(np.square(ATEs)))
+    
+    return min(d, key=d.get)
+
 def load_boatlift_data(outcome='loguearnhre', treatment=None):
 
     df = pd.read_stata('aux_may-org.dta')
