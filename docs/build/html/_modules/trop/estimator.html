@@ -5,7 +5,7 @@
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html"><link rel="search" title="Search" href="../../search.html">
 
     <!-- Generated with Sphinx 9.0.4 and Furo 2025.12.19 -->
-        <title>trop.estimator - trop 0.1.3 documentation</title>
+        <title>trop.estimator - trop 0.1.4 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=8dab3a3b" />
@@ -160,7 +160,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../../index.html"><div class="brand">trop 0.1.3 documentation</div></a>
+      <a href="../../index.html"><div class="brand">trop 0.1.4 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -181,7 +181,7 @@
       
       <div class="sidebar-sticky"><a class="sidebar-brand" href="../../index.html">
   
-  <span class="sidebar-brand-text">trop 0.1.3 documentation</span>
+  <span class="sidebar-brand-text">trop 0.1.4 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -252,44 +252,48 @@
     <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Triply Robust Panel (TROP) estimator in a TWFE framework with:</span>
-<span class="sd">      - distance-based unit weights (lambda_unit)</span>
-<span class="sd">      - distance-based time weights (lambda_time)</span>
-<span class="sd">      - optional low-rank regression adjustment (nuclear norm penalty, lambda_nn)</span>
+<span class="sd">    Compute the TROP treatment effect with unit/time weighting and optional low-rank</span>
+<span class="sd">    outcome model.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    Y:</span>
-<span class="sd">        Outcome matrix of shape (N, T).</span>
-<span class="sd">    W:</span>
-<span class="sd">        Treatment indicator matrix of shape (N, T). Typically binary {0,1}.</span>
-<span class="sd">        Convention in the provided codebase: treated units are treated in the final</span>
-<span class="sd">        `treated_periods` columns, but the function will run for any W.</span>
-<span class="sd">    treated_units:</span>
-<span class="sd">        Indices of treated units (row indices into Y/W).</span>
-<span class="sd">    lambda_unit:</span>
-<span class="sd">        Nonnegative tuning parameter controlling unit-weight decay.</span>
-<span class="sd">    lambda_time:</span>
-<span class="sd">        Nonnegative tuning parameter controlling time-weight decay.</span>
-<span class="sd">    lambda_nn:</span>
-<span class="sd">        Nuclear norm penalty weight for the low-rank component L.</span>
-<span class="sd">        Use np.inf to disable low-rank adjustment (i.e., no L term).</span>
-<span class="sd">    treated_periods:</span>
-<span class="sd">        Number of treated (post) periods at the end of the panel used to define:</span>
-<span class="sd">          - the time-distance center</span>
-<span class="sd">          - the pre-period mask for unit distance computation</span>
-<span class="sd">    solver:</span>
-<span class="sd">        Optional CVXPY solver name. If None, chooses a reasonable default:</span>
-<span class="sd">          - if lambda_nn is finite: uses SCS (supports nuclear norm / SDP forms)</span>
-<span class="sd">          - if lambda_nn is infinite: uses OSQP (fast for pure quadratic problems)</span>
-<span class="sd">    verbose:</span>
-<span class="sd">        Passed to CVXPY solve().</span>
+<span class="sd">    Y : array_like of shape (N, T)</span>
+<span class="sd">        Outcome matrix.</span>
+<span class="sd">    W : array_like of shape (N, T)</span>
+<span class="sd">        Treatment indicator (often binary). The estimator uses ``W`` as provided;</span>
+<span class="sd">        ``treated_periods`` is used only to construct weights/masks, not to infer</span>
+<span class="sd">        treatment timing.</span>
+<span class="sd">    treated_units : sequence of int</span>
+<span class="sd">        Row indices of treated units used to form the reference (average) treated</span>
+<span class="sd">        trajectory for unit-distance weighting.</span>
+<span class="sd">    lambda_unit : float</span>
+<span class="sd">        Nonnegative decay parameter for unit weights: ``exp(-lambda_unit * dist_unit)``.</span>
+<span class="sd">    lambda_time : float</span>
+<span class="sd">        Nonnegative decay parameter for time weights: ``exp(-lambda_time * dist_time)``.</span>
+<span class="sd">    lambda_nn : float</span>
+<span class="sd">        Nuclear-norm penalty weight for the low-rank component ``L``. Use</span>
+<span class="sd">        ``np.inf`` to disable the low-rank adjustment (i.e., omit ``L``).</span>
+<span class="sd">    treated_periods : int, default=10</span>
+<span class="sd">        Number of final columns treated as the &quot;post/tail block&quot; for constructing</span>
+<span class="sd">        (a) the pre-period mask (all but last ``treated_periods`` columns) used in</span>
+<span class="sd">        unit distances, and (b) the time-distance center.</span>
+<span class="sd">    solver : str or None, default=None</span>
+<span class="sd">        CVXPY solver name. If None, uses &quot;SCS&quot; when ``lambda_nn`` is finite and</span>
+<span class="sd">        &quot;OSQP&quot; when ``lambda_nn`` is infinite.</span>
+<span class="sd">    verbose : bool, default=False</span>
+<span class="sd">        Passed to ``cvxpy.Problem.solve``.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    float</span>
-<span class="sd">        Estimated average treatment effect tau.</span>
+<span class="sd">        Estimated treatment-effect parameter ``tau`` from the weighted TWFE objective.</span>
 
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If input shapes are inconsistent or tuning parameters are invalid.</span>
+<span class="sd">    RuntimeError</span>
+<span class="sd">        If the optimization fails to produce a finite ``tau``.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
     <span class="n">W</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">W</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
@@ -418,7 +422,7 @@
       
     </aside>
   </div>
-</div><script src="../../_static/documentation_options.js?v=360bc84d"></script>
+</div><script src="../../_static/documentation_options.js?v=fd825880"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/scripts/furo.js?v=46bd48cc"></script>

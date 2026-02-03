@@ -5,7 +5,7 @@
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html"><link rel="search" title="Search" href="../../search.html">
 
     <!-- Generated with Sphinx 9.0.4 and Furo 2025.12.19 -->
-        <title>trop.cv - trop 0.1.3 documentation</title>
+        <title>trop.cv - trop 0.1.4 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=8dab3a3b" />
@@ -160,7 +160,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../../index.html"><div class="brand">trop 0.1.3 documentation</div></a>
+      <a href="../../index.html"><div class="brand">trop 0.1.4 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -181,7 +181,7 @@
       
       <div class="sidebar-sticky"><a class="sidebar-brand" href="../../index.html">
   
-  <span class="sidebar-brand-text">trop 0.1.3 documentation</span>
+  <span class="sidebar-brand-text">trop 0.1.4 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -241,25 +241,7 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_validate_panel</span><span class="p">(</span><span class="n">Y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">treated_periods</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">n_treated_units</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Validate panel dimensions and basic placebo-treatment parameters.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    Y:</span>
-<span class="sd">        Outcome panel of shape (N, T).</span>
-<span class="sd">    treated_periods:</span>
-<span class="sd">        Number of treated (post) periods assumed to be the final columns of the panel.</span>
-<span class="sd">        Must satisfy 1 &lt;= treated_periods &lt; T.</span>
-<span class="sd">    n_treated_units:</span>
-<span class="sd">        Number of treated units to sample without replacement from {0, ..., N-1}.</span>
-<span class="sd">        Must satisfy 1 &lt;= n_treated_units &lt; N.</span>
-
-<span class="sd">    Raises</span>
-<span class="sd">    ------</span>
-<span class="sd">    ValueError</span>
-<span class="sd">        If Y is not 2D, or if treated_periods / n_treated_units are out of range.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validate panel dimensions and placebo CV inputs.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">Y</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Y must be a 2D array of shape (N, T).&quot;</span><span class="p">)</span>
     <span class="n">N</span><span class="p">,</span> <span class="n">T</span> <span class="o">=</span> <span class="n">Y</span><span class="o">.</span><span class="n">shape</span>
@@ -270,24 +252,7 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_as_list</span><span class="p">(</span><span class="n">grid</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Convert a lambda grid iterable into a non-empty list of floats.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    grid:</span>
-<span class="sd">        Iterable of candidate lambda values.</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    List[float]</span>
-<span class="sd">        The grid converted to a list of floats.</span>
-
-<span class="sd">    Raises</span>
-<span class="sd">    ------</span>
-<span class="sd">    ValueError</span>
-<span class="sd">        If the grid is empty.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert an iterable of grid values to a non-empty list of floats.&quot;&quot;&quot;</span>
     <span class="n">grid_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">grid</span><span class="p">)</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">grid_list</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;lambda_grid must be non-empty.&quot;</span><span class="p">)</span>
@@ -348,41 +313,48 @@
     <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Cross-validate one lambda parameter while keeping the other two fixed.</span>
+<span class="sd">    Tune one TROP tuning parameter via placebo cross-validation on a control-only panel.</span>
+
+<span class="sd">    For each candidate value in `lambda_grid`, this routine repeatedly assigns a placebo</span>
+<span class="sd">    treatment to random units in the last `treated_periods` columns, computes the</span>
+<span class="sd">    corresponding TROP estimate, and selects the lambda that minimizes the RMSE of</span>
+<span class="sd">    placebo effects.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    Y_control:</span>
-<span class="sd">        Control-only panel (N x T) used for placebo CV.</span>
-<span class="sd">    n_treated_units:</span>
-<span class="sd">        Number of placebo treated units to sample each trial.</span>
-<span class="sd">    treated_periods:</span>
-<span class="sd">        Number of placebo treated (post) periods (assumed final columns).</span>
-<span class="sd">    fixed_lambdas:</span>
-<span class="sd">        Tuple of two lambdas to hold fixed; interpretation depends on `lambda_cv`:</span>
-<span class="sd">        - lambda_cv=&#39;unit&#39;: fixed_lambdas=(lambda_time, lambda_nn)</span>
-<span class="sd">        - lambda_cv=&#39;time&#39;: fixed_lambdas=(lambda_unit, lambda_nn)</span>
-<span class="sd">        - lambda_cv=&#39;nn&#39;  : fixed_lambdas=(lambda_unit, lambda_time)</span>
-<span class="sd">    lambda_grid:</span>
-<span class="sd">        Grid of candidate values for the lambda being tuned.</span>
-<span class="sd">        If None, uses np.arange(0, 2, 0.2).</span>
-<span class="sd">    lambda_cv:</span>
-<span class="sd">        Which lambda to tune: {&#39;unit&#39;,&#39;time&#39;,&#39;nn&#39;}.</span>
-<span class="sd">    n_trials:</span>
-<span class="sd">        Number of placebo trials per lambda.</span>
-<span class="sd">    n_jobs:</span>
-<span class="sd">        joblib parallelism. -1 uses all available cores.</span>
-<span class="sd">    prefer:</span>
-<span class="sd">        joblib backend preference. Use &#39;threads&#39; by default for solver stability.</span>
-<span class="sd">    random_seed:</span>
-<span class="sd">        Seed for generating trial seeds (deterministic CV).</span>
-<span class="sd">    solver, verbose:</span>
-<span class="sd">        Passed through to TROP_TWFE_average.</span>
+<span class="sd">    Y_control : array_like of shape (N, T)</span>
+<span class="sd">        Control-only outcome panel used for placebo cross-validation.</span>
+<span class="sd">    n_treated_units : int</span>
+<span class="sd">        Number of placebo treated units sampled (without replacement) per trial.</span>
+<span class="sd">    treated_periods : int</span>
+<span class="sd">        Number of placebo treated (post) periods, taken as the final columns.</span>
+<span class="sd">    fixed_lambdas : tuple of float, default=(0.0, 0.0)</span>
+<span class="sd">        Values held fixed for the two lambdas not being tuned. Interpretation depends on</span>
+<span class="sd">        `lambda_cv`:</span>
+<span class="sd">        - &#39;unit&#39;: (lambda_time, lambda_nn)</span>
+<span class="sd">        - &#39;time&#39;: (lambda_unit, lambda_nn)</span>
+<span class="sd">        - &#39;nn&#39;  : (lambda_unit, lambda_time)</span>
+<span class="sd">    lambda_grid : iterable of float or None, default=None</span>
+<span class="sd">        Candidate values for the lambda being tuned. If None, uses ``np.arange(0, 2, 0.2)``.</span>
+<span class="sd">    lambda_cv : {&#39;unit&#39;, &#39;time&#39;, &#39;nn&#39;}, default=&#39;unit&#39;</span>
+<span class="sd">        Which lambda to tune.</span>
+<span class="sd">    n_trials : int, default=200</span>
+<span class="sd">        Number of placebo trials per candidate lambda.</span>
+<span class="sd">    n_jobs : int, default=-1</span>
+<span class="sd">        Number of parallel jobs for placebo trials. ``-1`` uses all available cores.</span>
+<span class="sd">    prefer : {&#39;threads&#39;, &#39;processes&#39;}, default=&#39;threads&#39;</span>
+<span class="sd">        joblib backend preference.</span>
+<span class="sd">    random_seed : int, default=0</span>
+<span class="sd">        Seed for generating trial seeds (deterministic tuning).</span>
+<span class="sd">    solver : str or None, default=None</span>
+<span class="sd">        CVXPY solver passed to ``TROP_TWFE_average``.</span>
+<span class="sd">    verbose : bool, default=False</span>
+<span class="sd">        Verbosity flag passed to ``TROP_TWFE_average``.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    float</span>
-<span class="sd">        Lambda value that minimizes RMSE of placebo ATEs.</span>
+<span class="sd">        Selected lambda value minimizing the RMSE of placebo estimates.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">Y_control</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
     <span class="n">_validate_panel</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">treated_periods</span><span class="p">,</span> <span class="n">n_treated_units</span><span class="p">)</span>
@@ -467,53 +439,54 @@
     <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Coordinate-descent style cross-validation for (lambda_unit, lambda_time, lambda_nn).</span>
+<span class="sd">    Tune (lambda_unit, lambda_time, lambda_nn) by coordinate-descent placebo cross-validation.</span>
 
-<span class="sd">    This routine alternates between optimizing lambda_unit, lambda_time, and lambda_nn</span>
-<span class="sd">    (via `TROP_cv_single`) while holding the other two fixed, until it reaches a fixed</span>
-<span class="sd">    point (no change in the selected lambdas) or until `max_iter` iterations are reached.</span>
+<span class="sd">    Iteratively updates one tuning parameter at a time using `TROP_cv_single` (holding the</span>
+<span class="sd">    other two fixed) until the selected triplet stops changing or `max_iter` is reached.</span>
+<span class="sd">    Each update minimizes the RMSE of placebo effects on a control-only panel.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    Y_control:</span>
-<span class="sd">        Control-only panel (N x T) used for placebo CV.</span>
-<span class="sd">    n_treated_units:</span>
-<span class="sd">        Number of placebo treated units to sample each trial.</span>
-<span class="sd">    treated_periods:</span>
-<span class="sd">        Number of placebo treated (post) periods (assumed final columns).</span>
-<span class="sd">    unit_grid:</span>
-<span class="sd">        Grid of candidate values for lambda_unit (unit-distance decay).</span>
-<span class="sd">    time_grid:</span>
-<span class="sd">        Grid of candidate values for lambda_time (time-distance decay).</span>
-<span class="sd">    nn_grid:</span>
-<span class="sd">        Grid of candidate values for lambda_nn (nuclear-norm penalty).</span>
-<span class="sd">    lambdas_init:</span>
-<span class="sd">        Optional initial values (lambda_unit, lambda_time, lambda_nn). If None, initializes</span>
-<span class="sd">        each lambda to the mean of its corresponding grid.</span>
-<span class="sd">    max_iter:</span>
+<span class="sd">    Y_control : array_like of shape (N, T)</span>
+<span class="sd">        Control-only outcome panel used for placebo cross-validation.</span>
+<span class="sd">    n_treated_units : int</span>
+<span class="sd">        Number of placebo treated units sampled (without replacement) per trial.</span>
+<span class="sd">    treated_periods : int</span>
+<span class="sd">        Number of placebo treated (post) periods, taken as the final columns.</span>
+<span class="sd">    unit_grid : sequence of float</span>
+<span class="sd">        Candidate values for `lambda_unit` (unit-distance decay).</span>
+<span class="sd">    time_grid : sequence of float</span>
+<span class="sd">        Candidate values for `lambda_time` (time-distance decay).</span>
+<span class="sd">    nn_grid : sequence of float</span>
+<span class="sd">        Candidate values for `lambda_nn` (nuclear-norm penalty).</span>
+<span class="sd">    lambdas_init : tuple of float or None, default=None</span>
+<span class="sd">        Initial values (lambda_unit, lambda_time, lambda_nn). If None, initializes each</span>
+<span class="sd">        parameter to the mean of its grid.</span>
+<span class="sd">    max_iter : int, default=50</span>
 <span class="sd">        Maximum number of coordinate-descent iterations.</span>
-<span class="sd">    n_trials:</span>
+<span class="sd">    n_trials : int, default=200</span>
 <span class="sd">        Number of placebo trials per grid point in each coordinate update.</span>
-<span class="sd">    n_jobs:</span>
-<span class="sd">        joblib parallelism. -1 uses all available cores.</span>
-<span class="sd">    prefer:</span>
-<span class="sd">        joblib backend preference. Use &#39;threads&#39; by default for solver stability.</span>
-<span class="sd">    random_seed:</span>
-<span class="sd">        Seed for generating trial seeds (deterministic CV).</span>
-<span class="sd">    solver, verbose:</span>
-<span class="sd">        Passed through to TROP_TWFE_average.</span>
+<span class="sd">    n_jobs : int, default=-1</span>
+<span class="sd">        Number of parallel jobs for placebo trials. ``-1`` uses all available cores.</span>
+<span class="sd">    prefer : {&#39;threads&#39;, &#39;processes&#39;}, default=&#39;threads&#39;</span>
+<span class="sd">        joblib backend preference.</span>
+<span class="sd">    random_seed : int, default=0</span>
+<span class="sd">        Seed for generating trial seeds (deterministic tuning).</span>
+<span class="sd">    solver : str or None, default=None</span>
+<span class="sd">        CVXPY solver passed to ``TROP_TWFE_average``.</span>
+<span class="sd">    verbose : bool, default=False</span>
+<span class="sd">        Verbosity flag passed to ``TROP_TWFE_average``.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    Tuple[float, float, float]</span>
-<span class="sd">        (lambda_unit, lambda_time, lambda_nn) at the converged fixed point.</span>
+<span class="sd">    tuple of float</span>
+<span class="sd">        (lambda_unit, lambda_time, lambda_nn) at the fixed point of the coordinate updates.</span>
 
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
 <span class="sd">    RuntimeError</span>
-<span class="sd">        If the procedure does not converge to a fixed point within `max_iter`.</span>
+<span class="sd">        If the procedure does not converge within `max_iter`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
     <span class="n">Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">Y_control</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
     <span class="n">_validate_panel</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">treated_periods</span><span class="p">,</span> <span class="n">n_treated_units</span><span class="p">)</span>
 
@@ -584,39 +557,50 @@
     <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Joint grid search over (lambda_unit, lambda_time, lambda_nn).</span>
+<span class="sd">    Select (lambda_unit, lambda_time, lambda_nn) by joint placebo cross-validation.</span>
+
+<span class="sd">    Performs a full grid search over `unit_grid` × `time_grid` × `nn_grid`. For each</span>
+<span class="sd">    candidate triple, repeatedly assigns a placebo treatment to random units in the</span>
+<span class="sd">    last `treated_periods` columns and selects the triple that minimizes the RMSE of</span>
+<span class="sd">    placebo effects on the control-only panel.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    Y_control:</span>
-<span class="sd">        Control-only panel (N x T) used for placebo CV.</span>
-<span class="sd">    n_treated_units:</span>
-<span class="sd">        Number of placebo treated units to sample each trial.</span>
-<span class="sd">    treated_periods:</span>
-<span class="sd">        Number of placebo treated (post) periods (assumed final columns).</span>
-<span class="sd">    unit_grid:</span>
-<span class="sd">        Grid of candidate values for lambda_unit (unit-distance decay).</span>
-<span class="sd">    time_grid:</span>
-<span class="sd">        Grid of candidate values for lambda_time (time-distance decay).</span>
-<span class="sd">    nn_grid:</span>
-<span class="sd">        Grid of candidate values for lambda_nn (nuclear-norm penalty).</span>
-<span class="sd">    n_trials:</span>
-<span class="sd">        Number of placebo trials per (lambda_unit, lambda_time, lambda_nn) triple.</span>
-<span class="sd">    n_jobs:</span>
-<span class="sd">        joblib parallelism. -1 uses all available cores.</span>
-<span class="sd">    prefer:</span>
-<span class="sd">        joblib backend preference. Use &#39;threads&#39; by default for solver stability.</span>
-<span class="sd">    random_seed:</span>
-<span class="sd">        Seed for generating trial seeds (deterministic CV).</span>
-<span class="sd">    solver, verbose:</span>
-<span class="sd">        Passed through to TROP_TWFE_average.</span>
+<span class="sd">    Y_control : array_like of shape (N, T)</span>
+<span class="sd">        Control-only outcome panel used for placebo cross-validation.</span>
+<span class="sd">    n_treated_units : int</span>
+<span class="sd">        Number of placebo treated units sampled (without replacement) per trial.</span>
+<span class="sd">    treated_periods : int</span>
+<span class="sd">        Number of placebo treated (post) periods, taken as the final columns.</span>
+<span class="sd">    unit_grid : sequence of float</span>
+<span class="sd">        Candidate values for `lambda_unit` (unit-distance decay).</span>
+<span class="sd">    time_grid : sequence of float</span>
+<span class="sd">        Candidate values for `lambda_time` (time-distance decay).</span>
+<span class="sd">    nn_grid : sequence of float</span>
+<span class="sd">        Candidate values for `lambda_nn` (nuclear-norm penalty).</span>
+<span class="sd">    n_trials : int, default=200</span>
+<span class="sd">        Number of placebo trials per candidate triple.</span>
+<span class="sd">    n_jobs : int, default=-1</span>
+<span class="sd">        Number of parallel jobs for placebo trials. ``-1`` uses all available cores.</span>
+<span class="sd">    prefer : {&#39;threads&#39;, &#39;processes&#39;}, default=&#39;threads&#39;</span>
+<span class="sd">        joblib backend preference.</span>
+<span class="sd">    random_seed : int, default=0</span>
+<span class="sd">        Seed for generating trial seeds (deterministic tuning).</span>
+<span class="sd">    solver : str or None, default=None</span>
+<span class="sd">        CVXPY solver passed to ``TROP_TWFE_average``.</span>
+<span class="sd">    verbose : bool, default=False</span>
+<span class="sd">        Verbosity flag passed to ``TROP_TWFE_average``.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    Tuple[float, float, float]</span>
-<span class="sd">        (lambda_unit, lambda_time, lambda_nn) triple that minimizes the RMSE of placebo ATEs.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    tuple of float</span>
+<span class="sd">        (lambda_unit, lambda_time, lambda_nn) minimizing the RMSE of placebo estimates.</span>
 
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    RuntimeError</span>
+<span class="sd">        If all parameter combinations fail (e.g., solver failures for every triple).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">Y_control</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
     <span class="n">_validate_panel</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">treated_periods</span><span class="p">,</span> <span class="n">n_treated_units</span><span class="p">)</span>
 
@@ -694,7 +678,7 @@
       
     </aside>
   </div>
-</div><script src="../../_static/documentation_options.js?v=360bc84d"></script>
+</div><script src="../../_static/documentation_options.js?v=fd825880"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/scripts/furo.js?v=46bd48cc"></script>

@@ -20,7 +20,6 @@ templates_path = ["_templates"]
 exclude_patterns = []
 
 html_theme = "furo"
-html_static_path = ["_static"]
 
 autodoc_default_options = {
     "members": True,

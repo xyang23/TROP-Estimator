@@ -239,50 +239,40 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="trop.estimator.TROP_TWFE_average">
 <span class="sig-prename descclassname"><span class="pre">trop.estimator.</span></span><span class="sig-name descname"><span class="pre">TROP_TWFE_average</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">W</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">treated_units</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lambda_unit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lambda_time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lambda_nn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">treated_periods</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trop/estimator.html#TROP_TWFE_average"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trop.estimator.TROP_TWFE_average" title="Link to this definition">¶</a></dt>
-<dd><dl class="simple">
-<dt>Triply Robust Panel (TROP) estimator in a TWFE framework with:</dt><dd><ul class="simple">
-<li><p>distance-based unit weights (lambda_unit)</p></li>
-<li><p>distance-based time weights (lambda_time)</p></li>
-<li><p>optional low-rank regression adjustment (nuclear norm penalty, lambda_nn)</p></li>
-</ul>
-</dd>
-</dl>
+<dd><p>Compute the TROP treatment effect with unit/time weighting and optional low-rank
+outcome model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>Y</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]]]</span>) – Outcome matrix of shape (N, T).</p></li>
-<li><p><strong>W</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]]]</span>) – Treatment indicator matrix of shape (N, T). Typically binary {0,1}.
-Convention in the provided codebase: treated units are treated in the final
-<cite>treated_periods</cite> columns, but the function will run for any W.</p></li>
-<li><p><strong>treated_units</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]</span>) – Indices of treated units (row indices into Y/W).</p></li>
-<li><p><strong>lambda_unit</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – Nonnegative tuning parameter controlling unit-weight decay.</p></li>
-<li><p><strong>lambda_time</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – Nonnegative tuning parameter controlling time-weight decay.</p></li>
-<li><p><strong>lambda_nn</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – Nuclear norm penalty weight for the low-rank component L.
-Use np.inf to disable low-rank adjustment (i.e., no L term).</p></li>
-<li><p><strong>treated_periods</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – <dl class="simple">
-<dt>Number of treated (post) periods at the end of the panel used to define:</dt><dd><ul>
-<li><p>the time-distance center</p></li>
-<li><p>the pre-period mask for unit distance computation</p></li>
-</ul>
-</dd>
-</dl>
-</p></li>
-<li><p><strong>solver</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – <dl class="simple">
-<dt>Optional CVXPY solver name. If None, chooses a reasonable default:</dt><dd><ul>
-<li><p>if lambda_nn is finite: uses SCS (supports nuclear norm / SDP forms)</p></li>
-<li><p>if lambda_nn is infinite: uses OSQP (fast for pure quadratic problems)</p></li>
-</ul>
-</dd>
-</dl>
-</p></li>
-<li><p><strong>verbose</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Passed to CVXPY solve().</p></li>
+<li><p><strong>Y</strong> (<em>array_like</em><em> of </em><em>shape</em><em> (</em><em>N</em><em>, </em><em>T</em><em>)</em>) – Outcome matrix.</p></li>
+<li><p><strong>W</strong> (<em>array_like</em><em> of </em><em>shape</em><em> (</em><em>N</em><em>, </em><em>T</em><em>)</em>) – Treatment indicator (often binary). The estimator uses <code class="docutils literal notranslate"><span class="pre">W</span></code> as provided;
+<code class="docutils literal notranslate"><span class="pre">treated_periods</span></code> is used only to construct weights/masks, not to infer
+treatment timing.</p></li>
+<li><p><strong>treated_units</strong> (<em>sequence</em><em> of </em><em>int</em>) – Row indices of treated units used to form the reference (average) treated
+trajectory for unit-distance weighting.</p></li>
+<li><p><strong>lambda_unit</strong> (<em>float</em>) – Nonnegative decay parameter for unit weights: <code class="docutils literal notranslate"><span class="pre">exp(-lambda_unit</span> <span class="pre">*</span> <span class="pre">dist_unit)</span></code>.</p></li>
+<li><p><strong>lambda_time</strong> (<em>float</em>) – Nonnegative decay parameter for time weights: <code class="docutils literal notranslate"><span class="pre">exp(-lambda_time</span> <span class="pre">*</span> <span class="pre">dist_time)</span></code>.</p></li>
+<li><p><strong>lambda_nn</strong> (<em>float</em>) – Nuclear-norm penalty weight for the low-rank component <code class="docutils literal notranslate"><span class="pre">L</span></code>. Use
+<code class="docutils literal notranslate"><span class="pre">np.inf</span></code> to disable the low-rank adjustment (i.e., omit <code class="docutils literal notranslate"><span class="pre">L</span></code>).</p></li>
+<li><p><strong>treated_periods</strong> (<em>int</em><em>, </em><em>default=10</em>) – Number of final columns treated as the “post/tail block” for constructing
+(a) the pre-period mask (all but last <code class="docutils literal notranslate"><span class="pre">treated_periods</span></code> columns) used in
+unit distances, and (b) the time-distance center.</p></li>
+<li><p><strong>solver</strong> (<em>str</em><em> or </em><em>None</em><em>, </em><em>default=None</em>) – CVXPY solver name. If None, uses “SCS” when <code class="docutils literal notranslate"><span class="pre">lambda_nn</span></code> is finite and
+“OSQP” when <code class="docutils literal notranslate"><span class="pre">lambda_nn</span></code> is infinite.</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em><em>, </em><em>default=False</em>) – Passed to <code class="docutils literal notranslate"><span class="pre">cvxpy.Problem.solve</span></code>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Estimated average treatment effect tau.</p>
+<dd class="field-even"><p>Estimated treatment-effect parameter <code class="docutils literal notranslate"><span class="pre">tau</span></code> from the weighted TWFE objective.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>float</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – If input shapes are inconsistent or tuning parameters are invalid.</p></li>
+<li><p><strong>RuntimeError</strong> – If the optimization fails to produce a finite <code class="docutils literal notranslate"><span class="pre">tau</span></code>.</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -293,30 +283,34 @@ Use np.inf to disable low-rank adjustment (i.e., no L term).</p></li>
 <dl class="py function">
 <dt class="sig sig-object py" id="trop.cv.TROP_cv_single">
 <span class="sig-prename descclassname"><span class="pre">trop.cv.</span></span><span class="sig-name descname"><span class="pre">TROP_cv_single</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Y_control</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_treated_units</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">treated_periods</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fixed_lambdas</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0.0,</span> <span class="pre">0.0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lambda_grid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lambda_cv</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'unit'</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_trials</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">200</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'threads'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trop/cv.html#TROP_cv_single"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trop.cv.TROP_cv_single" title="Link to this definition">¶</a></dt>
-<dd><p>Cross-validate one lambda parameter while keeping the other two fixed.</p>
+<dd><p>Tune one TROP tuning parameter via placebo cross-validation on a control-only panel.</p>
+<p>For each candidate value in <cite>lambda_grid</cite>, this routine repeatedly assigns a placebo
+treatment to random units in the last <cite>treated_periods</cite> columns, computes the
+corresponding TROP estimate, and selects the lambda that minimizes the RMSE of
+placebo effects.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>Y_control</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]]]</span>) – Control-only panel (N x T) used for placebo CV.</p></li>
-<li><p><strong>n_treated_units</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Number of placebo treated units to sample each trial.</p></li>
-<li><p><strong>treated_periods</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Number of placebo treated (post) periods (assumed final columns).</p></li>
-<li><p><strong>fixed_lambdas</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]</span>) – Tuple of two lambdas to hold fixed; interpretation depends on <cite>lambda_cv</cite>:
-- lambda_cv=’unit’: fixed_lambdas=(lambda_time, lambda_nn)
-- lambda_cv=’time’: fixed_lambdas=(lambda_unit, lambda_nn)
-- lambda_cv=’nn’  : fixed_lambdas=(lambda_unit, lambda_time)</p></li>
-<li><p><strong>lambda_grid</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Iterable</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]]</span>) – Grid of candidate values for the lambda being tuned.
-If None, uses np.arange(0, 2, 0.2).</p></li>
-<li><p><strong>lambda_cv</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Which lambda to tune: {‘unit’,’time’,’nn’}.</p></li>
-<li><p><strong>n_trials</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Number of placebo trials per lambda.</p></li>
-<li><p><strong>n_jobs</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – joblib parallelism. -1 uses all available cores.</p></li>
-<li><p><strong>prefer</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – joblib backend preference. Use ‘threads’ by default for solver stability.</p></li>
-<li><p><strong>random_seed</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Seed for generating trial seeds (deterministic CV).</p></li>
-<li><p><strong>solver</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – Passed through to TROP_TWFE_average.</p></li>
-<li><p><strong>verbose</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Passed through to TROP_TWFE_average.</p></li>
+<li><p><strong>Y_control</strong> (<em>array_like</em><em> of </em><em>shape</em><em> (</em><em>N</em><em>, </em><em>T</em><em>)</em>) – Control-only outcome panel used for placebo cross-validation.</p></li>
+<li><p><strong>n_treated_units</strong> (<em>int</em>) – Number of placebo treated units sampled (without replacement) per trial.</p></li>
+<li><p><strong>treated_periods</strong> (<em>int</em>) – Number of placebo treated (post) periods, taken as the final columns.</p></li>
+<li><p><strong>fixed_lambdas</strong> (<em>tuple</em><em> of </em><em>float</em><em>, </em><em>default=</em><em>(</em><em>0.0</em><em>, </em><em>0.0</em><em>)</em>) – Values held fixed for the two lambdas not being tuned. Interpretation depends on
+<cite>lambda_cv</cite>:
+- ‘unit’: (lambda_time, lambda_nn)
+- ‘time’: (lambda_unit, lambda_nn)
+- ‘nn’  : (lambda_unit, lambda_time)</p></li>
+<li><p><strong>lambda_grid</strong> (<em>iterable</em><em> of </em><em>float</em><em> or </em><em>None</em><em>, </em><em>default=None</em>) – Candidate values for the lambda being tuned. If None, uses <code class="docutils literal notranslate"><span class="pre">np.arange(0,</span> <span class="pre">2,</span> <span class="pre">0.2)</span></code>.</p></li>
+<li><p><strong>lambda_cv</strong> (<em>{'unit'</em><em>, </em><em>'time'</em><em>, </em><em>'nn'}</em><em>, </em><em>default='unit'</em>) – Which lambda to tune.</p></li>
+<li><p><strong>n_trials</strong> (<em>int</em><em>, </em><em>default=200</em>) – Number of placebo trials per candidate lambda.</p></li>
+<li><p><strong>n_jobs</strong> (<em>int</em><em>, </em><em>default=-1</em>) – Number of parallel jobs for placebo trials. <code class="docutils literal notranslate"><span class="pre">-1</span></code> uses all available cores.</p></li>
+<li><p><strong>prefer</strong> (<em>{'threads'</em><em>, </em><em>'processes'}</em><em>, </em><em>default='threads'</em>) – joblib backend preference.</p></li>
+<li><p><strong>random_seed</strong> (<em>int</em><em>, </em><em>default=0</em>) – Seed for generating trial seeds (deterministic tuning).</p></li>
+<li><p><strong>solver</strong> (<em>str</em><em> or </em><em>None</em><em>, </em><em>default=None</em>) – CVXPY solver passed to <code class="docutils literal notranslate"><span class="pre">TROP_TWFE_average</span></code>.</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em><em>, </em><em>default=False</em>) – Verbosity flag passed to <code class="docutils literal notranslate"><span class="pre">TROP_TWFE_average</span></code>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Lambda value that minimizes RMSE of placebo ATEs.</p>
+<dd class="field-even"><p>Selected lambda value minimizing the RMSE of placebo estimates.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>float</p>
@@ -327,38 +321,38 @@ If None, uses np.arange(0, 2, 0.2).</p></li>
 <dl class="py function">
 <dt class="sig sig-object py" id="trop.cv.TROP_cv_cycle">
 <span class="sig-prename descclassname"><span class="pre">trop.cv.</span></span><span class="sig-name descname"><span class="pre">TROP_cv_cycle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Y_control</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_treated_units</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">treated_periods</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nn_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lambdas_init</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_trials</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">200</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'threads'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trop/cv.html#TROP_cv_cycle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trop.cv.TROP_cv_cycle" title="Link to this definition">¶</a></dt>
-<dd><p>Coordinate-descent style cross-validation for (lambda_unit, lambda_time, lambda_nn).</p>
-<p>This routine alternates between optimizing lambda_unit, lambda_time, and lambda_nn
-(via <cite>TROP_cv_single</cite>) while holding the other two fixed, until it reaches a fixed
-point (no change in the selected lambdas) or until <cite>max_iter</cite> iterations are reached.</p>
+<dd><p>Tune (lambda_unit, lambda_time, lambda_nn) by coordinate-descent placebo cross-validation.</p>
+<p>Iteratively updates one tuning parameter at a time using <cite>TROP_cv_single</cite> (holding the
+other two fixed) until the selected triplet stops changing or <cite>max_iter</cite> is reached.
+Each update minimizes the RMSE of placebo effects on a control-only panel.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>Y_control</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]]]</span>) – Control-only panel (N x T) used for placebo CV.</p></li>
-<li><p><strong>n_treated_units</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Number of placebo treated units to sample each trial.</p></li>
-<li><p><strong>treated_periods</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Number of placebo treated (post) periods (assumed final columns).</p></li>
-<li><p><strong>unit_grid</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]</span>) – Grid of candidate values for lambda_unit (unit-distance decay).</p></li>
-<li><p><strong>time_grid</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]</span>) – Grid of candidate values for lambda_time (time-distance decay).</p></li>
-<li><p><strong>nn_grid</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]</span>) – Grid of candidate values for lambda_nn (nuclear-norm penalty).</p></li>
-<li><p><strong>lambdas_init</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]]</span>) – Optional initial values (lambda_unit, lambda_time, lambda_nn). If None, initializes
-each lambda to the mean of its corresponding grid.</p></li>
-<li><p><strong>max_iter</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Maximum number of coordinate-descent iterations.</p></li>
-<li><p><strong>n_trials</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Number of placebo trials per grid point in each coordinate update.</p></li>
-<li><p><strong>n_jobs</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – joblib parallelism. -1 uses all available cores.</p></li>
-<li><p><strong>prefer</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – joblib backend preference. Use ‘threads’ by default for solver stability.</p></li>
-<li><p><strong>random_seed</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Seed for generating trial seeds (deterministic CV).</p></li>
-<li><p><strong>solver</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – Passed through to TROP_TWFE_average.</p></li>
-<li><p><strong>verbose</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Passed through to TROP_TWFE_average.</p></li>
+<li><p><strong>Y_control</strong> (<em>array_like</em><em> of </em><em>shape</em><em> (</em><em>N</em><em>, </em><em>T</em><em>)</em>) – Control-only outcome panel used for placebo cross-validation.</p></li>
+<li><p><strong>n_treated_units</strong> (<em>int</em>) – Number of placebo treated units sampled (without replacement) per trial.</p></li>
+<li><p><strong>treated_periods</strong> (<em>int</em>) – Number of placebo treated (post) periods, taken as the final columns.</p></li>
+<li><p><strong>unit_grid</strong> (<em>sequence</em><em> of </em><em>float</em>) – Candidate values for <cite>lambda_unit</cite> (unit-distance decay).</p></li>
+<li><p><strong>time_grid</strong> (<em>sequence</em><em> of </em><em>float</em>) – Candidate values for <cite>lambda_time</cite> (time-distance decay).</p></li>
+<li><p><strong>nn_grid</strong> (<em>sequence</em><em> of </em><em>float</em>) – Candidate values for <cite>lambda_nn</cite> (nuclear-norm penalty).</p></li>
+<li><p><strong>lambdas_init</strong> (<em>tuple</em><em> of </em><em>float</em><em> or </em><em>None</em><em>, </em><em>default=None</em>) – Initial values (lambda_unit, lambda_time, lambda_nn). If None, initializes each
+parameter to the mean of its grid.</p></li>
+<li><p><strong>max_iter</strong> (<em>int</em><em>, </em><em>default=50</em>) – Maximum number of coordinate-descent iterations.</p></li>
+<li><p><strong>n_trials</strong> (<em>int</em><em>, </em><em>default=200</em>) – Number of placebo trials per grid point in each coordinate update.</p></li>
+<li><p><strong>n_jobs</strong> (<em>int</em><em>, </em><em>default=-1</em>) – Number of parallel jobs for placebo trials. <code class="docutils literal notranslate"><span class="pre">-1</span></code> uses all available cores.</p></li>
+<li><p><strong>prefer</strong> (<em>{'threads'</em><em>, </em><em>'processes'}</em><em>, </em><em>default='threads'</em>) – joblib backend preference.</p></li>
+<li><p><strong>random_seed</strong> (<em>int</em><em>, </em><em>default=0</em>) – Seed for generating trial seeds (deterministic tuning).</p></li>
+<li><p><strong>solver</strong> (<em>str</em><em> or </em><em>None</em><em>, </em><em>default=None</em>) – CVXPY solver passed to <code class="docutils literal notranslate"><span class="pre">TROP_TWFE_average</span></code>.</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em><em>, </em><em>default=False</em>) – Verbosity flag passed to <code class="docutils literal notranslate"><span class="pre">TROP_TWFE_average</span></code>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(lambda_unit, lambda_time, lambda_nn) at the converged fixed point.</p>
+<dd class="field-even"><p>(lambda_unit, lambda_time, lambda_nn) at the fixed point of the coordinate updates.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Tuple[float, float, float]</p>
+<dd class="field-odd"><p>tuple of float</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>RuntimeError</strong> – If the procedure does not converge to a fixed point within <cite>max_iter</cite>.</p>
+<dd class="field-even"><p><strong>RuntimeError</strong> – If the procedure does not converge within <cite>max_iter</cite>.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -366,29 +360,36 @@ each lambda to the mean of its corresponding grid.</p></li>
 <dl class="py function">
 <dt class="sig sig-object py" id="trop.cv.TROP_cv_joint">
 <span class="sig-prename descclassname"><span class="pre">trop.cv.</span></span><span class="sig-name descname"><span class="pre">TROP_cv_joint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Y_control</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_treated_units</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">treated_periods</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nn_grid</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_trials</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">200</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'threads'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trop/cv.html#TROP_cv_joint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trop.cv.TROP_cv_joint" title="Link to this definition">¶</a></dt>
-<dd><p>Joint grid search over (lambda_unit, lambda_time, lambda_nn).</p>
+<dd><p>Select (lambda_unit, lambda_time, lambda_nn) by joint placebo cross-validation.</p>
+<p>Performs a full grid search over <cite>unit_grid</cite> × <cite>time_grid</cite> × <cite>nn_grid</cite>. For each
+candidate triple, repeatedly assigns a placebo treatment to random units in the
+last <cite>treated_periods</cite> columns and selects the triple that minimizes the RMSE of
+placebo effects on the control-only panel.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>Y_control</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]]]</span>) – Control-only panel (N x T) used for placebo CV.</p></li>
-<li><p><strong>n_treated_units</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Number of placebo treated units to sample each trial.</p></li>
-<li><p><strong>treated_periods</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Number of placebo treated (post) periods (assumed final columns).</p></li>
-<li><p><strong>unit_grid</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]</span>) – Grid of candidate values for lambda_unit (unit-distance decay).</p></li>
-<li><p><strong>time_grid</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]</span>) – Grid of candidate values for lambda_time (time-distance decay).</p></li>
-<li><p><strong>nn_grid</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]</span>) – Grid of candidate values for lambda_nn (nuclear-norm penalty).</p></li>
-<li><p><strong>n_trials</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Number of placebo trials per (lambda_unit, lambda_time, lambda_nn) triple.</p></li>
-<li><p><strong>n_jobs</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – joblib parallelism. -1 uses all available cores.</p></li>
-<li><p><strong>prefer</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – joblib backend preference. Use ‘threads’ by default for solver stability.</p></li>
-<li><p><strong>random_seed</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Seed for generating trial seeds (deterministic CV).</p></li>
-<li><p><strong>solver</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – Passed through to TROP_TWFE_average.</p></li>
-<li><p><strong>verbose</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Passed through to TROP_TWFE_average.</p></li>
+<li><p><strong>Y_control</strong> (<em>array_like</em><em> of </em><em>shape</em><em> (</em><em>N</em><em>, </em><em>T</em><em>)</em>) – Control-only outcome panel used for placebo cross-validation.</p></li>
+<li><p><strong>n_treated_units</strong> (<em>int</em>) – Number of placebo treated units sampled (without replacement) per trial.</p></li>
+<li><p><strong>treated_periods</strong> (<em>int</em>) – Number of placebo treated (post) periods, taken as the final columns.</p></li>
+<li><p><strong>unit_grid</strong> (<em>sequence</em><em> of </em><em>float</em>) – Candidate values for <cite>lambda_unit</cite> (unit-distance decay).</p></li>
+<li><p><strong>time_grid</strong> (<em>sequence</em><em> of </em><em>float</em>) – Candidate values for <cite>lambda_time</cite> (time-distance decay).</p></li>
+<li><p><strong>nn_grid</strong> (<em>sequence</em><em> of </em><em>float</em>) – Candidate values for <cite>lambda_nn</cite> (nuclear-norm penalty).</p></li>
+<li><p><strong>n_trials</strong> (<em>int</em><em>, </em><em>default=200</em>) – Number of placebo trials per candidate triple.</p></li>
+<li><p><strong>n_jobs</strong> (<em>int</em><em>, </em><em>default=-1</em>) – Number of parallel jobs for placebo trials. <code class="docutils literal notranslate"><span class="pre">-1</span></code> uses all available cores.</p></li>
+<li><p><strong>prefer</strong> (<em>{'threads'</em><em>, </em><em>'processes'}</em><em>, </em><em>default='threads'</em>) – joblib backend preference.</p></li>
+<li><p><strong>random_seed</strong> (<em>int</em><em>, </em><em>default=0</em>) – Seed for generating trial seeds (deterministic tuning).</p></li>
+<li><p><strong>solver</strong> (<em>str</em><em> or </em><em>None</em><em>, </em><em>default=None</em>) – CVXPY solver passed to <code class="docutils literal notranslate"><span class="pre">TROP_TWFE_average</span></code>.</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em><em>, </em><em>default=False</em>) – Verbosity flag passed to <code class="docutils literal notranslate"><span class="pre">TROP_TWFE_average</span></code>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(lambda_unit, lambda_time, lambda_nn) triple that minimizes the RMSE of placebo ATEs.</p>
+<dd class="field-even"><p>(lambda_unit, lambda_time, lambda_nn) minimizing the RMSE of placebo estimates.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Tuple[float, float, float]</p>
+<dd class="field-odd"><p>tuple of float</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>RuntimeError</strong> – If all parameter combinations fail (e.g., solver failures for every triple).</p>
 </dd>
 </dl>
 </dd></dl>
