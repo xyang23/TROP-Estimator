@@ -1,12 +1,12 @@
 Metadata-Version: 2.4
 Name: trop
-Version: 0.1.3
+Version: 0.1.4
 Summary: Triply Robust Panel (TROP) estimator: weighted TWFE with optional low-rank adjustment.
 Author: Susan Athey, Guido Imbens, Zhaonan Qu, Davide Viviano
 License-Expression: MIT
-Project-URL: Homepage, https://github.com/zhaonanq/TROP
-Project-URL: Repository, https://github.com/zhaonanq/TROP
-Project-URL: Issues, https://github.com/zhaonanq/TROP/issues
+Project-URL: Homepage, https://github.com/ostasovskyi/TROP-Estimator
+Project-URL: Repository, https://github.com/ostasovskyi/TROP-Estimator
+Project-URL: Issues, https://github.com/ostasovskyi/TROP-Estimator/issues
 Keywords: causal-inference,panel-data,factor-models,difference-in-differences,synthetic-control,synthetic-controls,trop,twfe
 Classifier: Development Status :: 3 - Alpha
 Classifier: Intended Audience :: Science/Research
@@ -43,6 +43,13 @@ Reference:
 > Susan Athey, Guido Imbens, Zhaonan Qu, Davide Viviano (2025).  
 > *Triply Robust Panel Estimators*.  
 > arXiv:2508.21536.
+
+---
+
+## Links
+
+- **Documentation**: https://ostasovskyi.github.io/TROP-Estimator/
+- **Source code**: https://github.com/ostasovskyi/TROP-Estimator
 
 ---
 

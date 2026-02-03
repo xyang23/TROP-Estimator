@@ -11,6 +11,13 @@ Reference:
 
 ---
 
+## Links
+
+- **Documentation**: https://ostasovskyi.github.io/TROP-Estimator/
+- **Source code**: https://github.com/ostasovskyi/TROP-Estimator
+
+---
+
 ## Installation
 
 ```
