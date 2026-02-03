@@ -1,0 +1,74 @@
+[build-system]
+requires = ["setuptools>=77", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "trop"
+version = "0.1.4"
+description = "Triply Robust Panel (TROP) estimator: weighted TWFE with optional low-rank adjustment."
+readme = "README.md"
+requires-python = ">=3.9"
+license = "MIT"
+license-files = ["LICENSE"]
+
+authors = [
+  { name = "Susan Athey" },
+  { name = "Guido Imbens" },
+  { name = "Zhaonan Qu" },
+  { name = "Davide Viviano" }
+]
+
+keywords = [
+  "causal-inference",
+  "panel-data",
+  "factor-models",
+  "difference-in-differences",
+  "synthetic-control",
+  "synthetic-controls",
+  "trop",
+  "twfe"
+]
+
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Science/Research",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Scientific/Engineering",
+  "Topic :: Scientific/Engineering :: Mathematics",
+]
+
+dependencies = [
+  "numpy>=1.23",
+  "cvxpy>=1.4",
+  "joblib>=1.2",
+  "osqp>=0.6.5",
+  "scs>=3.2.4",
+]
+
+[project.urls]
+Homepage = "https://github.com/ostasovskyi/TROP-Estimator"
+Repository = "https://github.com/ostasovskyi/TROP-Estimator"
+Issues = "https://github.com/ostasovskyi/TROP-Estimator/issues"
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=7.0",
+  "ruff>=0.5.0",
+  "black>=24.0.0",
+]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

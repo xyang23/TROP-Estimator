@@ -1,0 +1,12 @@
+LICENSE
+README.md
+pyproject.toml
+src/trop/__init__.py
+src/trop/cv.py
+src/trop/estimator.py
+src/trop.egg-info/PKG-INFO
+src/trop.egg-info/SOURCES.txt
+src/trop.egg-info/dependency_links.txt
+src/trop.egg-info/requires.txt
+src/trop.egg-info/top_level.txt
+tests/test_smoke_trop.py
