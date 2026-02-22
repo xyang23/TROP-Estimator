@@ -6,8 +6,7 @@ from typing import Iterable, Optional, Sequence, Tuple, Union, List
 import numpy as np
 from joblib import Parallel, delayed
 
-#from .estimator import TROP_TWFE_average
-from estimator import TROP_TWFE_average # debug, need to revert back after deploy into pypi
+from .estimator import TROP_TWFE_average
 
 ArrayLike = Union[np.ndarray, Sequence[Sequence[float]]]
 
@@ -137,7 +136,7 @@ def TROP_cv_single(
     *,
     cv_sampling_method="resample",
     n_trials: Optional[int] = 200,
-    n_treated_units:  Optional[int] = 1, # debug
+    n_treated_units:  Optional[int] = 1,
     K: Optional[int] = None,
     n_jobs: int = -1,
     prefer: str = "threads",
@@ -267,15 +266,6 @@ def TROP_cv_single(
             )
 
         scores.append(float(np.sqrt(np.mean(ates_arr**2))))
-    # # debug: plot the cv function
-    # import matplotlib.pyplot as plt
-    # plt.plot(lambda_grid_list,scores, label=f"{cv_sampling_method}: {n_trial_or_fold}")
-    # plt.xlabel('lambda')
-    # plt.ylabel('Q value')
-    # plt.title('Q function for lambda')
-    # plt.show()
-    # # plt.savefig(f"cv_curves/cv_curve_{cv_sampling_method}_{n_trial_or_fold}.png")
-    # ##
     best_idx = int(np.argmin(scores))
     return float(lambda_grid_list[best_idx])
 
@@ -291,7 +281,7 @@ def TROP_cv_cycle(
     max_iter: int = 50,
     cv_sampling_method="resample",
     n_trials: Optional[int] = 200,
-    n_treated_units:  Optional[int] = 1, # debug
+    n_treated_units:  Optional[int] = 1, 
     K: Optional[int] = None,
     n_jobs: int = -1,
     prefer: str = "threads",
@@ -423,7 +413,7 @@ def TROP_cv_joint(
     *,
     cv_sampling_method="resample",
     n_trials: Optional[int] = 200,
-    n_treated_units:  Optional[int] = 1, # debug
+    n_treated_units:  Optional[int] = 1, 
     K: Optional[int] = None,
     n_jobs: int = -1,
     prefer: str = "threads",
